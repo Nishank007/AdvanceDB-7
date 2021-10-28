@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+<form action="/calc_q2" method="post">
+	<h2>Lat range scatter</h2>
+
+	<div class="field">
+		<label class="label">Min Latitude</label>
+		<div class="control">
+			<input
+				class="input is-large"
+				type="number"
+				value="30"
+				placeholder="Minimum Latitude"
+				name="minlat"
+				id="minlat"
+				required
+			/>
+		</div>
+	</div>
+
+	<div class="field">
+		<label class="label">Max Latitude</label>
+		<div class="control">
+			<input
+				class="input is-large"
+				type="number"
+				value="90"
+				placeholder="Max Latitude"
+				name="maxlat"
+				id="maxlat"
+				required
+			/>
+		</div>
+	</div>
+
+	<div class="field is-grouped">
+		<div class="control">
+			<button class="button is-link is-dark" type="submit">
+				Fetch
+			</button>
+		</div>
+	</div>
+</form>
+{% if response is defined and response is not none and response.q2_result is not none %}
+	{{ response.q2_result.table|safe }}
+	<div id="q2_chart"></div>
+	<script>
+		var chart_scatterplot = c3.generate({
+			bindto: "#q2_chart",
+			size: {
+				width: 800,
+				height: 800
+			},
+			data: {
+				json: {{ response.q2_result.chart|safe }},
+				keys: {
+					x: 'latitude',
+					value: ['elev'],
+				},
+				type: 'scatter',
+				colors: {
+					elev: "#000",
+				}
+			},
+			axis: {
+				x: {
+					label: "latitude"
+				},
+				y: {
+					label: "elevation"
+				}
+			}
+		});
+	</script>
+	
+	{% endif %}
+	
+<a href="{{ url_for('index') }}">Go back to Home Page</a>
+{% endblock %}
+

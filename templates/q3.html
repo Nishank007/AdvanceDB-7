@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+<form action="/calc_q3" method="post">
+	<h2>Country elev bar chart</h2>
+
+	<div class="field">
+		<label class="label">Country</label>
+		<div class="control">
+			<input
+				class="input is-large"
+				type="text"
+				value="Japan"
+				placeholder="Country"
+				name="country"
+				id="country"
+				required
+			/>
+		</div>
+	</div>
+
+	<div class="field is-grouped">
+		<div class="control">
+			<button class="button is-link is-dark" type="submit">
+				Fetch
+			</button>
+		</div>
+	</div>
+</form>
+{% if response is defined and response is not none and response.q3_result is not none %}
+	{{ response.q3_result.table|safe }}
+	<div id="q3_chart_bar"></div>
+	<script>
+		var chart = c3.generate({
+			bindto: "#q3_chart_bar",
+			size: {
+				width: 800,
+				height: 800
+			},
+			data: {
+				columns: {{ response.q3_result.chart|safe }},
+				type: 'bar'
+			},
+			bar: {
+				space: 0.25,
+				width: {
+					ratio: 1
+				}
+			},
+			axis: {
+				rotated: false,
+				x: {
+					type: "category",
+					label: "ID"
+				};
+				y: {
+					label: "Elevation"
+				}
+			}
+		});
+	</script>
+{% endif %}
+
+<a href="{{ url_for('index') }}">Go back to Home Page</a>
+{% endblock %}
+
+
+
+
+
+

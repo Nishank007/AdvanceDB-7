@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+<form action="/calc_q1" method="post">
+	<h2>Country pie chart</h2>
+
+	<div class="field">
+		<label class="label">Country</label>
+		<div class="control">
+			<input
+				class="input is-large"
+				type="text"
+				value="Japan"
+				placeholder="Country"
+				name="country"
+				id="country"
+				required
+			/>
+		</div>
+	</div>
+
+	<div class="field is-grouped">
+		<div class="control">
+			<button class="button is-link is-dark" type="submit">
+				Fetch
+			</button>
+		</div>
+	</div>
+</form>
+{% if response is defined and response is not none and response.q1_result is not none %}
+	{{ response.q1_result.table|safe }}
+	<div id="q1_chart_pie"></div>
+	<script>
+		var chart = c3.generate({
+			bindto: "#q1_chart_pie",
+			size: {
+				width: 800,
+				height: 800
+				},
+			data: {
+				columns: {{ response.q1_result.chart|safe }},
+				type : 'pie'
+			}
+		});
+	</script>
+{% endif %}
+
+<a href="{{ url_for('index') }}">Go back to Home Page</a>
+{% endblock %}

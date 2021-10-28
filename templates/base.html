@@ -1,0 +1,54 @@
+{% extends 'bootstrap/base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="static/style.css">
+{% endblock %}
+
+{% block title %}
+  {% if title %}{{ title }} - {{ appname }}{% else %}{{ appname }}{% endif %}
+{% endblock %}
+
+{% block navbar %}
+    <nav class="navbar navbar-default">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="{{ url_for('index') }}">Home</a>
+                <!-- <a class="navbar-brand" href="{{ url_for('q1') }}">Question 1</a> -->
+                <!-- <a class="navbar-brand" href="{{ url_for('q2') }}">Question 2</a> -->
+                <!-- <a class="navbar-brand" href="{{ url_for('q3') }}">Question 3</a> -->
+            </div>
+        </div>
+    </nav>
+{% endblock %}
+
+
+{% block content %}
+    <div id="title_bar" class="jumbotron justify-content-md-center">
+      <div class="container">
+        <h2 id="main_title">{{ appname }}</h1>
+        <h3 id="student_id">1001861756</h2>
+        <h4 id="student_name">Gujar, Nishank </h3>
+        {% if response is defined and response is not none and response.show_image %}
+        <h4 class="title has-text-centered">IP Address: {{ response.get("ip") }}</h4>
+        <hr>
+        <h2>Single instance running</h2>
+        <img src="{{ response.image }}" alt="No image found" srcset="">
+        <h2>Multiple instances running</h2>
+        <img src="{{ response.mul_image }}" alt="No image found" srcset="">
+        {% endif %}
+      </div>
+    </div>
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-info" role="alert">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+        {% block app_content %}
+        {% endblock %}
+    </div>
+{% endblock %}
